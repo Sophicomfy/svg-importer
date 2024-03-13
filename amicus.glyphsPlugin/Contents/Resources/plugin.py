@@ -16,6 +16,9 @@ import objc
 from GlyphsApp import *
 from GlyphsApp.plugins import *
 
+# Assembling the code imports
+from ui_main import showAmicusWindow
+
 class AmicusSVGImporter(GeneralPlugin):
 
     @objc.python_method
@@ -33,9 +36,10 @@ class AmicusSVGImporter(GeneralPlugin):
         newMenuItem = NSMenuItem(self.name, self.showWindow_)
         Glyphs.menu[EDIT_MENU].append(newMenuItem)
 
+# Assembling code calling functions
     def showWindow_(self, sender):
-        # Simple notification to show that the plugin works
-        Glyphs.showNotification('Amicus SVG Importer', 'The Amicus plugin is successfully running!')
+    showAmicusWindow()
+
 
     @objc.python_method
     def __file__(self):
