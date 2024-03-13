@@ -38,7 +38,7 @@ class AmicusSVGImporter(GeneralPlugin):
 
 # Assembling code calling functions
     def showWindow_(self, sender):
-    showAmicusWindow()
+        showAmicusWindow()
 
 
     @objc.python_method
