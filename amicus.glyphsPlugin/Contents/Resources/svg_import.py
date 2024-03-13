@@ -1,12 +1,14 @@
 # svg_import.py
-import os
-from vanilla import FileDialog
+from GlyphsApp import *
 from svg_import_loader import SVGImportLoader
 
 def batch_import_svg():
-    folder_path = FileDialog.getFolder()
+    # Using Glyphs' method to get a folder path
+    folder_path = GetFolder(message="Select the folder containing 'refined.svg' files")
+    
     if folder_path:
         loader = SVGImportLoader(folder_path)
         svg_files = loader.load_svg_files()
-        # Placeholder for further processing of loaded SVG files
         print(f"Loaded {len(svg_files)} SVG files from {folder_path}.")
+    else:
+        print("No folder was selected.")
