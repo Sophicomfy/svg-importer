@@ -1,3 +1,4 @@
+# svg_import_loader.py
 import os
 
 class SVGImportLoader:
@@ -5,8 +6,5 @@ class SVGImportLoader:
         self.root_dir = root_dir
 
     def load_svg_files(self):
-        svg_files = []
-        for file in os.listdir(self.root_dir):
-            if file.endswith("refined.svg"):
-                svg_files.append(os.path.join(self.root_dir, file))
+        svg_files = [os.path.join(self.root_dir, f) for f in os.listdir(self.root_dir) if f.endswith("_refined.svg")]
         return svg_files
