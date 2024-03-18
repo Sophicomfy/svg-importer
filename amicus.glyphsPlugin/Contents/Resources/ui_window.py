@@ -1,6 +1,7 @@
 # ui_window.py
-from vanilla import Window, Button, TextBox
 from GlyphsApp import *
+from vanilla import Window, Button, TextBox
+from svg_import import batch_import_svg, selective_import_svg
 
 class AmicusWindow:
     def __init__(self):

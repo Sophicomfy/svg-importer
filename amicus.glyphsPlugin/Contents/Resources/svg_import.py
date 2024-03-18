@@ -11,7 +11,7 @@ def batch_import_svg():
         print("Batch import cancelled. No folder was selected.")
 
 def selective_import_svg():
-    file_path = GetOpenFile("Select an SVG file", allowsMultipleSelection=False, fileTypes=["svg"])
+    file_path = GetOpenFile("Select an SVG file")
     if file_path:
         loader = SVGImportLoader()
         loader.load_single_svg(file_path)
