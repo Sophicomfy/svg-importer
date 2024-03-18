@@ -3,6 +3,13 @@ from GlyphsApp import *
 from svg_import_loader import SVGImportLoader
 from svg_import_parser import parse_svg
 
+def selectiveImportCallback(self, sender):
+    file_path = GetOpenFile(allowedFileTypes=["svg"])
+    if file_path:
+        print(f"Selected SVG file: {file_path}")
+    else:
+        print("No SVG file selected.")
+
 def batch_import_svg():
     folder_path = GetFolder(message="Select the folder containing 'refined.svg' files")
     if folder_path:
