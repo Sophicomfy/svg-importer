@@ -1,7 +1,7 @@
 # svg_import.py
 from GlyphsApp import GetOpenFile, GetFolder
 from svg_import_loader import SVGImportLoader
-from svg_import_batcher import SVGBatcher
+from svg_import_batcher import batch_process_svgs
 
 def selective_import_svg():
     file_path = GetOpenFile("Select an SVG file")
@@ -14,9 +14,6 @@ def selective_import_svg():
 def batch_import_svg():
     folder_path = GetFolder("Select the folder containing 'refined.svg' files")
     if folder_path:
-        loader = SVGImportLoader()
-        svg_files = loader.load_svg_files_from_folder(folder_path)
-        batcher = SVGBatcher(svg_files)
-        batcher.process_batch()
+        batch_process_svgs(folder_path)
     else:
         print("Batch import cancelled. No folder was selected.")
