@@ -1,10 +1,9 @@
-'''
-svg_import_parser.py
+# svg_import_parser.py
 
-For `Selective Import`, bind the parsing data method and print the parsed data.
-- refactor the code of involved files
-- keep parser logic in `svg_import_parser.py` so that it handles only parsing regardless of selective or batch import, as `svg_import_batcher.py` always provides only one file at the batch.
-- keep main logic in `svg_import.py`
+# For `Selective Import`, bind the parsing data method and print the parsed data.
+# - refactor the code of involved files
+# - keep parser logic in `svg_import_parser.py` so that it handles only parsing regardless of selective or batch import, as `svg_import_batcher.py` always provides only one file at the batch.
+# - keep main logic in `svg_import.py`
 
 
 import xml.etree.ElementTree as ET
@@ -37,5 +36,3 @@ def parse_single_svg(file_path):
     except Exception as e:
         print(f"Error parsing SVG file {file_path}: {e}")
         return None
-
-'''
