@@ -23,3 +23,4 @@ class SVGImportLoader:
             print(f"Loaded {len(self.loaded_files)} SVG files from {folder_path}.")
         else:
             print("No SVG files found in the selected folder.")
+            
