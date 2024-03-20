@@ -2,12 +2,17 @@
 from GlyphsApp import GetOpenFile, GetFolder
 from svg_import_loader import SVGImportLoader
 from svg_import_batcher import batch_process_svgs
+from svg_import_parser import parse_svg
 
 def selective_import_svg():
     file_path = GetOpenFile("Select an SVG file")
     if file_path:
         loader = SVGImportLoader()
-        loader.load_single_svg(file_path)
+        loaded_file = loader.load_single_svg(file_path)
+        if loaded_file:
+            parse_svg(loaded_file, print_parsed_data=True)
+        else:
+            print("Failed to load the SVG file.")
     else:
         print("Selective import cancelled. No SVG file was selected.")
 
