@@ -11,8 +11,8 @@
 # - end loop print: information about done
 
 from svg_import_loader import SVGImportLoader
-# Placeholder imports for parser, converter, and distributor modules
-# from svg_import_parser import parse_svg
+from svg_import_parser import parse_svg
+# Assume these modules are implemented
 # from svg_import_converter import convert_svg_data_to_glyphs_format
 # from svg_import_distributor import distribute_glyph_data
 
@@ -21,13 +21,16 @@ def batch_process_svgs(folder_path):
     svg_files = loader.load_svg_files_from_folder(folder_path)
     
     if not svg_files:
-        print("No SVG files to process.")
+        print("No refined SVG files to process.")
         return
 
     for file_path in svg_files:
         print(f"Processing: {file_path}")
-        # Placeholder for parsing, converting, and distributing logic
-        # Assume these steps are implemented
+        parsed_data = parse_svg(file_path, print_parsed_data=True)  # True to print parsed data for validation
+        # Further processing with converter and distributor modules
+        # converted_data = convert_svg_data_to_glyphs_format(parsed_data)
+        # distribute_glyph_data(converted_data)
+
         print(f"Successfully processed and saved: {file_path.split('/')[-1]}")
     
     print("Batch import process completed.")
