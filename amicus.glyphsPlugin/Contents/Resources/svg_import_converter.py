@@ -1,29 +1,40 @@
 from GlyphsApp import GSPath, GSNode, GSOFFCURVE, GSCURVE, GSLINE
 import re
 
-def convert_svg_paths_to_glyphs(svg_data):
-    converted_paths = []
-    for path_data in svg_data.get('paths', []):
-        gs_path = GSPath()
-        path_commands = re.findall(r'[MLC][^MLC]*', path_data)  # Split path data into commands
+def convert_svg_path_to_glyphs_nodes(parsed_data):
+    glyph_name = parsed_data['glyph_name']
+    svg_paths = parsed_data['paths']
+    
+    glyphs_nodes = []
+    
+    for svg_path in svg_paths:
+        commands = svg_path.split()
+        path_nodes = []
+        i = 0
+        while i < len(commands):
+            command = commands[i]
+            if command == 'M':
+                x, y = float(commands[i+1]), float(commands[i+2])
+                path_nodes.append({'type': 'line', 'position': (x, y)})
+                i += 3
+            elif command == 'C':
+                cp1x, cp1y = float(commands[i+1]), float(commands[i+2])
+                path_nodes.append({'type': 'offcurve', 'position': (cp1x, cp1y)})
+                cp2x, cp2y = float(commands[i+3]), float(commands[i+4])
+                path_nodes.append({'type': 'offcurve', 'position': (cp2x, cp2y)})
+                ex, ey = float(commands[i+5]), float(commands[i+6])
+                path_nodes.append({'type': 'curve', 'position': (ex, ey)})
+                i += 7
+        
+        glyphs_nodes.append({'closed': True, 'nodes': path_nodes})
+    
+    print_forwarded_data(glyph_name, glyphs_nodes)
+    
+    return glyphs_nodes
 
-        for command in path_commands:
-            cmd_type = command[0]
-            points = [float(coord) for coord in command[1:].strip().split()]
-            points_iter = iter(points)
-            point_pairs = list(zip(points_iter, points_iter))
-
-            if cmd_type == 'M':  # MoveTo command
-                # MoveTo is handled implicitly by starting a new GSPath, as GSPath always starts with a moveTo
-                pass
-            elif cmd_type == 'C':  # Cubic Bézier Curve command
-                for i, (x, y) in enumerate(point_pairs):
-                    node_type = GSOFFCURVE if i < 2 else GSCURVE  # First two points are off-curve, last is on-curve
-                    gs_node = GSNode((x, y), node_type)
-                    gs_path.nodes.append(gs_node)
-
-        gs_path.closed = True if path_data.endswith('Z') else False  # Check if path should be closed
-        converted_paths.append(gs_path)
-
-    print(f"Converted {len(converted_paths)} paths for glyph: {svg_data.get('glyph_name')}")
-    return converted_paths
+def print_forwarded_data(glyph_name, glyphs_nodes):
+    print(f"Forwarding the following data for {glyph_name} to svg_import_distributor.py:")
+    for path_index, path in enumerate(glyphs_nodes):
+        print(f"  Path {path_index + 1}: Closed: {path['closed']}, Nodes:")
+        for node in path['nodes']:
+            print(f"    Type: {node['type']}, Position: {node['position']}")
