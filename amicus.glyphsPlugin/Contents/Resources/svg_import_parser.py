@@ -1,4 +1,3 @@
-# svg_import_parser.py
 import xml.etree.ElementTree as ET
 
 def parse_svg(svg_path, print_parsed_data=False):
@@ -8,16 +7,18 @@ def parse_svg(svg_path, print_parsed_data=False):
         paths = root.findall('.//{http://www.w3.org/2000/svg}path')
         path_data = [path.attrib['d'] for path in paths if 'd' in path.attrib]
 
-        # Extract filename for glyph name, assuming naming convention
         glyph_name = svg_path.split('/')[-1].replace('_refined.svg', '')
+        parsed_data = {'glyph_name': glyph_name, 'paths': path_data}
 
-        # Print detailed parsed data if flag is True
         if print_parsed_data:
-            print(f"Glyph Name: {glyph_name}")
-            for i, path in enumerate(path_data):
+            print(f"Glyph Name: {parsed_data['glyph_name']}")
+            for i, path in enumerate(parsed_data['paths']):
                 print(f"  Path {i+1}: {path}")
 
-        return {'glyph_name': glyph_name, 'paths': path_data}
+        print("Forwarding the following data to svg_import_converter.py:")
+        print(parsed_data)
+
+        return parsed_data
     except ET.ParseError as e:
         print(f"Error parsing SVG file {svg_path}: {e}")
         return None
