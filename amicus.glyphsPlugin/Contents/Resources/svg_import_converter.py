@@ -1,60 +1,61 @@
 from GlyphsApp import GSPath, GSNode, GSOFFCURVE, GSCURVE, GSLINE
 
+def svg_command_to_glyphs_node(command, params):
+    """
+    Convert an SVG command with its parameters to a list of Glyphs nodes.
+    """
+    if command == 'M' or command == 'L':
+        # 'M' and 'L' commands correspond to GSLINE nodes in Glyphs.
+        return [((params[0], params[1]), 'line')]
+    elif command == 'C':
+        # 'C' command corresponds to a curve in Glyphs, requiring two offcurve nodes followed by a curve node.
+        return [
+            ((params[0], params[1]), 'offcurve'),
+            ((params[2], params[3]), 'offcurve'),
+            ((params[4], params[5]), 'curve')
+        ]
+    else:
+        # Placeholder for handling additional SVG path commands.
+        print(f"Warning: Unhandled SVG command '{command}'")
+        return []
+
+def parse_svg_path(svg_path):
+    nodes = []
+    # Split the path string into command tokens. This is a simplified parser and may need adjustments for complex paths.
+    tokens = svg_path.replace('-', ' -').split()
+    i = 0
+
+    while i < len(tokens):
+        command = tokens[i]
+        params = []
+
+        if command in ['M', 'L']:
+            params = [float(tokens[i + 1]), float(tokens[i + 2])]
+            i += 3
+        elif command == 'C':
+            params = [float(tokens[i + 1]), float(tokens[i + 2]), float(tokens[i + 3]), float(tokens[i + 4]), float(tokens[i + 5]), float(tokens[i + 6])]
+            i += 7
+
+        nodes.extend(svg_command_to_glyphs_node(command, params))
+
+    return nodes
+
 def convert_svg_path_to_glyphs_nodes(parsed_data):
-    glyph_name = parsed_data['glyph_name']
-    svg_paths = parsed_data['paths']
-    glyphs_nodes = []
+    converted_data = []
 
-    for svg_path in svg_paths:
-        path_nodes = parse_svg_path(svg_path)
-        glyphs_nodes.append({'closed': True, 'nodes': path_nodes})
-    
-    print_forwarded_data(glyph_name, glyphs_nodes)
-    return glyphs_nodes
+    for glyph_data in parsed_data:
+        glyph_name, svg_paths = glyph_data['glyph_name'], glyph_data['paths']
+        all_nodes = [parse_svg_path(svg_path) for svg_path in svg_paths]
 
-def convert_svg_path_to_glyphs_nodes(parsed_data):
-    glyph_name = parsed_data['glyph_name']
-    svg_paths = parsed_data['paths']
-    
-    glyphs_nodes = []
-    
-    for svg_path in svg_paths:
-        commands = svg_path.split()
-        path_nodes = []
-        i = 0
+        converted_data.append({
+            "glyphname": glyph_name,
+            "layers": [{
+                "shapes": [{
+                    "closed": True,
+                    "nodes": [node for sublist in all_nodes for node in sublist]  # Flatten the list of nodes
+                }],
+            }]
+        })
 
-        while i < len(commands):
-            command = commands[i]
-            if command == 'M' or command == 'L':
-                x, y = float(commands[i+1]), float(commands[i+2])
-                # Correction: Ensure position is a tuple of floats
-                path_nodes.append(GSNode((x, y), GSLINE))
-                i += 3
-            elif command == 'C':
-                # Handling cubic bezier curves with OFFCURVE and CURVE nodes
-                cp1x, cp1y = float(commands[i+1]), float(commands[i+2])
-                cp2x, cp2y = float(commands[i+3]), float(commands[i+4])
-                ex, ey = float(commands[i+5]), float(commands[i+6])
-                path_nodes.extend([
-                    GSNode((cp1x, cp1y), GSOFFCURVE),
-                    GSNode((cp2x, cp2y), GSOFFCURVE),
-                    GSNode((ex, ey), GSCURVE)
-                ])
-                i += 7
-            else:
-                print(f"Unsupported command: {command}")
-                break
-
-        glyphs_nodes.append({'closed': True, 'nodes': path_nodes})
-
-    print_forwarded_data(glyph_name, glyphs_nodes)
-
-    return path_nodes
-
-def print_forwarded_data(glyph_name, glyphs_nodes):
-    print(f"Forwarding the following data for {glyph_name} to svg_import_distributor.py:")
-    for path_index, path in enumerate(glyphs_nodes):
-        print(f"  Path {path_index + 1}: Closed: {path['closed']}, Nodes:")
-        for node in path['nodes']:
-            print(f"    Type: {node.type}, Position: {node.position}")
-
+    print(converted_data)
+    return converted_data
