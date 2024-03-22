@@ -7,10 +7,9 @@ from svg_import_parser import parse_svg
 def selective_import_svg():
     file_path = GetOpenFile("Select an SVG file")
     if file_path:
-        loader = SVGImportLoader()
-        loaded_file = loader.load_single_svg(file_path)
-        if loaded_file:
-            parse_svg(loaded_file, print_parsed_data=True)
+        parsed_data = parse_svg(file_path, print_parsed_data=True)
+        if parsed_data:
+            convert_svg_path_to_glyphs_nodes(parsed_data)
         else:
             print("Failed to load the SVG file.")
     else:

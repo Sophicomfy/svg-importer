@@ -12,13 +12,12 @@
 
 from svg_import_loader import SVGImportLoader
 from svg_import_parser import parse_svg
+from svg_import_converter import convert_svg_path_to_glyphs_nodes
 # Assume these modules are implemented
-# from svg_import_converter import convert_svg_data_to_glyphs_format
 # from svg_import_distributor import distribute_glyph_data
 
 def batch_process_svgs(folder_path):
-    loader = SVGImportLoader()
-    svg_files = loader.load_svg_files_from_folder(folder_path)
+    svg_files = SVGImportLoader().load_svg_files_from_folder(folder_path)
     
     if not svg_files:
         print("No refined SVG files to process.")
@@ -26,11 +25,13 @@ def batch_process_svgs(folder_path):
 
     for file_path in svg_files:
         print(f"Processing: {file_path}")
-        parsed_data = parse_svg(file_path, print_parsed_data=True)  # True to print parsed data for validation
-        # Further processing with converter and distributor modules
-        # converted_data = convert_svg_data_to_glyphs_format(parsed_data)
-        # distribute_glyph_data(converted_data)
+        parsed_data = parse_svg(file_path, print_parsed_data=True)
+        if parsed_data:
+            converted_data = convert_svg_path_to_glyphs_nodes(parsed_data)
+            # Assuming distribute_glyph_data is implemented and available
+            # distribute_glyph_data(converted_data)
+            print(f"Successfully processed: {file_path.split('/')[-1]}")
+        else:
+            print(f"Failed to parse: {file_path}")
 
-        print(f"Successfully processed and saved: {file_path.split('/')[-1]}")
-    
     print("Batch import process completed.")
