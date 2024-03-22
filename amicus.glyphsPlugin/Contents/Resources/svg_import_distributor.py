@@ -1,41 +1,30 @@
-Code `svg_import_distributor.py`
-Goal: Distribute converted data into respective glyph within the Glyphs file.
-- For the converted data item
-    - Check whether glyph with respective name exist
-        - if yes: create new layer within the glyph and draw the paths from converted data
-        - if not: create glyph with respective glyph name and draw the paths from converted data within that glyph
-    - Save the file
+from GlyphsApp import Glyphs
 
+def distribute_converted_data(converted_data):
+    font = Glyphs.font  # Current font opened in Glyphs
 
-The expected glyph data format:
-```
-{
-glyphname = A;  # converted name here
-layers = (
-{
-layerId = m01;
-shapes = (      # converted nodes data here
-{
-closed = 1;
-nodes = (
-(433,72,o),
-(529,168,o),
-(529,287,cs),
-(529,405,o),
-(433,501,o),
-(315,501,cs),
-(196,501,o),
-(100,405,o),
-(100,287,cs),
-(100,168,o),
-(196,72,o),
-(315,72,cs)
-);
-}
-);
-width = 600;
-}
-);
-unicode = 65;
-}
-```
+    for data_item in converted_data:
+        glyph_name = data_item["glyphname"]
+        glyph = font.glyphs[glyph_name]
+
+        if not glyph:
+            glyph = GSGlyph(glyph_name)
+            font.glyphs.append(glyph)
+        
+        new_layer = GSLayer()
+        new_layer.layerId = data_item["layers"][0]["layerId"]
+        new_layer.width = data_item["layers"][0]["width"]
+        glyph.layers.append(new_layer)
+
+        for shape in data_item["layers"][0]["shapes"]:
+            new_path = GSPath()
+            for node_data in shape["nodes"]:
+                x, y, node_type = node_data
+                new_node = GSNode((x, y), type=node_type)
+                new_path.nodes.append(new_node)
+            new_path.closed = shape["closed"]
+            new_layer.paths.append(new_path)
+
+        glyph.unicode = data_item["unicode"]
+
+    font.save()
