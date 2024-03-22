@@ -2,7 +2,7 @@
 from GlyphsApp import GetOpenFile, GetFolder
 from svg_import_loader import SVGImportLoader
 from svg_import_batcher import batch_process_svgs
-from svg_import_parser import parse_svg
+from svg_import_converter import convert_svg_path_to_glyphs_nodes
 
 def selective_import_svg():
     file_path = GetOpenFile("Select an SVG file")
