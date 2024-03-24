@@ -1,5 +1,14 @@
 from GlyphsApp import GSNode, GSLINE, GSCURVE, GSOFFCURVE
 
+NODE_TYPES = {
+    'M': 'LINE',  # Moveto maps to a line node in Glyphs
+    'L': 'LINE',  # Lineto maps to a line node in Glyphs
+    'C': 'CURVE',  # Curveto requires offcurve and a curve node in Glyphs
+}
+
+def convert_svg_command_to_glyphs_node_type(command):
+    return NODE_TYPES.get(command, 'OFFCURVE')
+
 def convert_svg_path_to_glyphs_nodes(svg_path):
     nodes = []
     commands = svg_path.split()
@@ -7,49 +16,57 @@ def convert_svg_path_to_glyphs_nodes(svg_path):
 
     while i < len(commands):
         command = commands[i]
+        node_type = convert_svg_command_to_glyphs_node_type(command)        
         if command in ['M', 'L']:
             x, y = float(commands[i+1]), float(commands[i+2])
-            # Convert nodes to the tuple format (x, y, type)
-            nodes.append((x, y, 'line'))
-            i += 3
+            nodes.append((x, y, 'l'))  # Using 'l' for line nodes
+            i += 3        
         elif command == 'C':
-            cp1 = (float(commands[i+1]), float(commands[i+2]))
-            cp2 = (float(commands[i+3]), float(commands[i+4]))
-            end = (float(commands[i+5]), float(commands[i+6]))
-            # Convert nodes to the tuple format including offcurve and curve types
-            nodes.extend([
-                (cp1[0], cp1[1], 'offcurve'),
-                (cp2[0], cp2[1], 'offcurve'),
-                (end[0], end[1], 'curve')
-            ])
+            # Control points
+            cp1 = (float(commands[i+1]), float(commands[i+2]), 'o')
+            cp2 = (float(commands[i+3]), float(commands[i+4]), 'o')
+            # End point
+            end = (float(commands[i+5]), float(commands[i+6]), 'c')  # Using 'c' for curve nodes
+            nodes.extend([cp1, cp2, end])
             i += 7
-        # Handle other commands as necessary
-    print("Converted nodes")
-    print(nodes)
+        
     return nodes
 
+def construct_glyphs_data_structure(parsed_data):
+    glyphs_data = []
 
-def construct_glyphs_data_structure(converted_data):
-    if isinstance(converted_data, dict):
-        converted_data = [converted_data]
+    for glyph_data in parsed_data:
+        glyph_name = glyph_data['glyph_name']
+        paths_data = glyph_data['paths']
+        shapes = []
 
-    converted_data = []
+        for path_data in paths_data:
+            nodes = convert_svg_path_to_glyphs_nodes(path_data)
+            shape = {"closed": 1, "nodes": nodes}
+            shapes.append(shape)
 
-    for glyph_data in converted_data:
-        glyph_name = glyph_data.get('glyph_name', 'Unknown')
-        svg_paths = glyph_data.get('paths', [])
-        glyphs_nodes = []
-
-        for path in svg_paths:
-            nodes = convert_svg_path_to_glyphs_nodes(path)
-            glyphs_nodes.append({"closed": True, "nodes": nodes})
-
-        construct_glyph = {
-            "glyphname": glyph_name,
-            "layers": [{"shapes": [{"closed": 1, "nodes": glyphs_nodes}]}]
+        glyph_structure = {
+            "glyph_name": glyph_name,
+            "layers": [{"shapes": shapes}]
         }
-        converted_data.append(construct_glyph)
 
-    # Directly print the converted data to verify the output
-    print(converted_data)
-    return converted_data
+        glyphs_data.append(glyph_structure)
+
+    print("Glyphs data:", glyphs_data)
+    return glyphs_data
+
+
+## Testing results
+- [x] code updated, plugin reinstalled, glyphs restarted
+- [x] clicked `Amicus` →  open: `Amicus UI Window`
+- [x] clicked on `Batch Import`→ open:  `folder dialogue`
+- [x] selected folder and clicked "open" → print: parsed data as expected
+- [x] clicked on `Selective Import`→ open:  `file dialogue`
+- [x] selected file and clicked "open" → print: parsed data as expected
+
+## Next step
+Goal: Convert the data with `svg_import_converter.py`
+Tasks:
+- [ ] Use browser extension to search for how to "convert `.svg` paths into Glyphs paths"
+
+**Do exactly what is requested!**
