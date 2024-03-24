@@ -12,6 +12,7 @@ def selective_import_svg():
         parsed_data = parse_svg(file_path, print_parsed_data=True)
         if parsed_data:
             converted_data = construct_glyphs_data_structure([parsed_data])
+            distribute_converted_data(converted_data)
         else:
             print("Failed to parse the SVG file.")
     else:
@@ -22,6 +23,6 @@ def batch_import_svg():
     folder_path = GetFolder("Select the folder containing 'refined.svg' files")
     if folder_path:
         converted_data = batch_process_svgs(folder_path)
-        distribute_converted_data(converted_data)  # Distribute the converted data for batch processing
+        distribute_converted_data(converted_data)
     else:
         print("Batch import cancelled. No folder was selected.")
