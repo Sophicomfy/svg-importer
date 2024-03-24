@@ -33,40 +33,25 @@ def convert_svg_path_to_glyphs_nodes(svg_path):
     return nodes
 
 def construct_glyphs_data_structure(parsed_data):
+    if not isinstance(parsed_data, list):
+        parsed_data = [parsed_data]
+
     glyphs_data = []
 
     for glyph_data in parsed_data:
         glyph_name = glyph_data['glyph_name']
-        paths_data = glyph_data['paths']
-        shapes = []
+        svg_paths = glyph_data['paths']
+        glyphs_nodes = []
 
-        for path_data in paths_data:
-            nodes = convert_svg_path_to_glyphs_nodes(path_data)
-            shape = {"closed": 1, "nodes": nodes}
-            shapes.append(shape)
+        for path in svg_paths:
+            nodes = convert_svg_path_to_glyphs_nodes(path)
+            glyphs_nodes.append({"closed": 1, "nodes": nodes})
 
-        glyph_structure = {
-            "glyph_name": glyph_name,
-            "layers": [{"shapes": shapes}]
+        construct_glyph = {
+            "glyphname": glyph_name,
+            "layers": [{"shapes": [{"closed": 1, "nodes": glyphs_nodes}]}]
         }
+        glyphs_data.append(construct_glyph)
 
-        glyphs_data.append(glyph_structure)
-
-    print("Glyphs data:", glyphs_data)
+    print("Converted Glyphs Data:", glyphs_data)
     return glyphs_data
-
-
-## Testing results
-- [x] code updated, plugin reinstalled, glyphs restarted
-- [x] clicked `Amicus` →  open: `Amicus UI Window`
-- [x] clicked on `Batch Import`→ open:  `folder dialogue`
-- [x] selected folder and clicked "open" → print: parsed data as expected
-- [x] clicked on `Selective Import`→ open:  `file dialogue`
-- [x] selected file and clicked "open" → print: parsed data as expected
-
-## Next step
-Goal: Convert the data with `svg_import_converter.py`
-Tasks:
-- [ ] Use browser extension to search for how to "convert `.svg` paths into Glyphs paths"
-
-**Do exactly what is requested!**
