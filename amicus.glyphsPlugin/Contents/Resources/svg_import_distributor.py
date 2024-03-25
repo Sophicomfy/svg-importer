@@ -12,7 +12,7 @@ def create_unique_layer_name(glyph, base_name="Amicus"):
         return f"{base_name} {i}"
 
 def distribute_converted_data(converted_data):
-    font = Glyphs.font
+    font = Glyphs.font  
     for data_item in converted_data:
         glyph_name = data_item['glyphname']
         glyph = font.glyphs[glyph_name]
@@ -29,12 +29,8 @@ def distribute_converted_data(converted_data):
         for shape in data_item['layers'][0]['shapes']:
             new_path = GSPath()
             for node_data in shape['nodes']:
-                if len(node_data) == 3:
-                    x, y, node_type = node_data
-                else:
-                    x, y = node_data
-                    node_type = 'l'
-                
+                x, y = float(node_data[0]), float(node_data[1])
+                node_type = node_data[2] if len(node_data) == 3 else 'l'
                 new_node = GSNode(NSPoint(x, y), type=node_type)
                 new_path.nodes.append(new_node)
             new_path.closed = shape['closed'] == 1
