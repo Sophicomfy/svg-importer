@@ -1,3 +1,4 @@
+import ast
 from GlyphsApp import Glyphs, GSGlyph, GSLayer, GSNode, GSPath
 from AppKit import NSPoint
 
@@ -12,7 +13,7 @@ def create_unique_layer_name(glyph, base_name="Amicus"):
         return f"{base_name} {i}"
 
 def distribute_converted_data(converted_data):
-    font = Glyphs.font  
+    font = Glyphs.font
     for data_item in converted_data:
         glyph_name = data_item['glyphname']
         glyph = font.glyphs[glyph_name]
@@ -20,7 +21,7 @@ def distribute_converted_data(converted_data):
         if not glyph:
             glyph = GSGlyph(glyph_name)
             font.glyphs.append(glyph)
-        
+
         new_layer_name = create_unique_layer_name(glyph, "Amicus")
         new_layer = GSLayer()
         new_layer.name = new_layer_name
@@ -28,9 +29,10 @@ def distribute_converted_data(converted_data):
 
         for shape in data_item['layers'][0]['shapes']:
             new_path = GSPath()
-            for node_data in shape['nodes']:
-                x, y = float(node_data[0]), float(node_data[1])
-                node_type = node_data[2] if len(node_data) == 3 else 'l'
+            for node_str in shape['nodes']:
+                node_data = ast.literal_eval(node_str)
+                x, y, node_type = node_data
+                x, y = float(x), float(y)  # Convert to floats
                 new_node = GSNode(NSPoint(x, y), type=node_type)
                 new_path.nodes.append(new_node)
             new_path.closed = shape['closed'] == 1
