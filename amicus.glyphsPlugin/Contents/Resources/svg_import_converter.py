@@ -17,15 +17,16 @@ def convert_svg_path_to_glyphs_nodes(svg_path):
     while i < len(commands):
         command = commands[i]
         if command in ['M', 'L']:
-            # Ensure x and y are floats
-            x, y = float(commands[i+1]), float(commands[i+2])
-            nodes.append((x, y, 'l'))  # 'l' for line nodes
+            # Round x and y values to nearest integer after converting to float
+            x, y = round(float(commands[i+1])), round(float(commands[i+2]))
+            # Append node data without spaces and without quotes around the node type
+            nodes.append(f"({x},{y},l)")  # Using 'l' for line nodes
             i += 3
         elif command == 'C':
-            # Ensure control points and end point are floats
-            cp1 = (float(commands[i+1]), float(commands[i+2]), 'o')
-            cp2 = (float(commands[i+3]), float(commands[i+4]), 'o')
-            end = (float(commands[i+5]), float(commands[i+6]), 'c')  # 'c' for curve nodes
+            # For control points and the endpoint, round values and format accordingly
+            cp1 = f"({round(float(commands[i+1]))},{round(float(commands[i+2]))},o)"
+            cp2 = f"({round(float(commands[i+3]))},{round(float(commands[i+4]))},o)"
+            end = f"({round(float(commands[i+5]))},{round(float(commands[i+6]))},c)"  # 'c' for curve nodes
             nodes.extend([cp1, cp2, end])
             i += 7
     return nodes
