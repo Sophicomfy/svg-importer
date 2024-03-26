@@ -28,6 +28,7 @@ def convert_svg_path_to_glyphs_nodes(svg_path):
             end = f"({round(float(commands[i+5]) * path_scale)},{round(float(commands[i+6]) * path_scale)},c)" 
             nodes.extend([cp1, cp2, end])
             i += 7
+    print("Converted Paths")
     print(nodes)
     return nodes
 
