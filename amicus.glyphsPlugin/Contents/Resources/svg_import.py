@@ -3,7 +3,7 @@ from GlyphsApp import GetOpenFile, GetFolder
 from svg_import_loader import SVGImportLoader
 from svg_import_batcher import batch_process_svgs
 from svg_import_parser import parse_svg
-from svg_import_converter import construct_glyphs_data_structure
+from svg_import_converter import construct_glyphs_shapes
 from svg_import_distributor import distribute_converted_data  # Import the distributor
 
 def selective_import_svg():
@@ -11,7 +11,7 @@ def selective_import_svg():
     if file_path:
         parsed_data = parse_svg(file_path, print_parsed_data=True)
         if parsed_data:
-            converted_data = construct_glyphs_data_structure([parsed_data])
+            converted_data = construct_glyphs_shapes([parsed_data])
             distribute_converted_data(converted_data)
         else:
             print("Failed to parse the SVG file.")

@@ -6,7 +6,6 @@ NODE_TYPES = {
     'C': 'CURVE',  # Curveto requires offcurve and a curve node in Glyphs
 }
 
-
 def convert_svg_command_to_glyphs_node_type(command):
     return NODE_TYPES.get(command, 'o')
 
@@ -20,7 +19,7 @@ def convert_svg_path_to_glyphs_nodes(svg_path):
         command = commands[i]
         if command in ['M', 'L']:
             x, y = round(float(commands[i+1]) * path_scale), round(float(commands[i+2]) * path_scale)
-            nodes.append(f"({x},{y},l)")  # Using 'l' for line nodes
+            nodes.append(f"({x},{y},l)")
             i += 3
         elif command == 'C':
             cp1 = f"({round(float(commands[i+1]) * path_scale)},{round(float(commands[i+2]) * path_scale)},o)"
@@ -28,30 +27,35 @@ def convert_svg_path_to_glyphs_nodes(svg_path):
             end = f"({round(float(commands[i+5]) * path_scale)},{round(float(commands[i+6]) * path_scale)},c)" 
             nodes.extend([cp1, cp2, end])
             i += 7
-    print("Converted Paths")
-    print(nodes)
-    return nodes
+    nodes_str = ', '.join(nodes)
 
-def construct_glyphs_data_structure(parsed_data):
-    if not isinstance(parsed_data, list):
-        parsed_data = [parsed_data]
+    print("Converted Paths", nodes_str)
+    return nodes_str
 
-    glyphs_data = []
+def construct_glyphs_shapes(parsed_data):
+    shapes = "shapes = (\n"
+    position = 0  # Initialize shape position
 
     for glyph_data in parsed_data:
-        glyph_name = glyph_data['glyph_name']
         svg_paths = glyph_data['paths']
-        glyphs_nodes = []
-
         for path in svg_paths:
-            nodes = convert_svg_path_to_glyphs_nodes(path)
-            glyphs_nodes.append({"closed": 1, "nodes": nodes})
+            nodes_str = convert_svg_path_to_glyphs_nodes(path)
+            # Determine if the shape is closed or open
+            # This is a simplified condition; adjust according to actual logic needed
+            shapeType = "closed = 1" if nodes_str.startswith("(") and nodes_str.endswith("c)") else "open = 0"
+            
+            # Append the formatted shape data to the shapes string
+            shapes += "{\n"
+            shapes += f"{shapeType}\n"  # Add shapeType
+            shapes += "nodes = (\n"  # Start nodes definition
+            shapes += nodes_str + "\n"  # Add nodes
+            shapes += ");\n"  # Close nodes definition
+            shapes += "}\n"  # Close shape definition
+            position += 1  # Increment position for the next shape
 
-        construct_glyph = {
-            "glyphname": glyph_name,
-            "layers": [{"shapes": [{"closed": 1, "nodes": glyphs_nodes}]}]
-        }
-        glyphs_data.append(construct_glyph)
+    shapes += ");"  # Close the shapes collectio
+    
+    print("Glyphs Shapes:")
+    print(shapes)
+    return shapes
 
-    print("Converted Glyphs Data:", glyphs_data)
-    return glyphs_data

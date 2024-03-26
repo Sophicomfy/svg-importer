@@ -1,4 +1,3 @@
-import ast
 from GlyphsApp import Glyphs, GSGlyph, GSLayer, GSNode, GSPath
 from AppKit import NSPoint
 
@@ -13,7 +12,7 @@ def create_unique_layer_name(glyph, base_name="Amicus"):
         return f"{base_name} {i}"
 
 def distribute_converted_data(converted_data):
-    font = Glyphs.font
+    font = Glyphs.font  # Access the current font
     for data_item in converted_data:
         glyph_name = data_item['glyphname']
         glyph = font.glyphs[glyph_name]
@@ -27,15 +26,18 @@ def distribute_converted_data(converted_data):
         new_layer.name = new_layer_name
         glyph.layers.append(new_layer)
 
+        # Assume the data_item['layers'][0]['shapes'] contains direct node data
         for shape in data_item['layers'][0]['shapes']:
-            new_path = GSPath()
+            # Directly appending the nodes to the Glyphs layer
             for node_str in shape['nodes']:
-                node_data = ast.literal_eval(node_str)
-                x, y, node_type = node_data
-                x, y = float(x), float(y)  # Convert to floats
+                node_tuple = eval(node_str)  # Assuming direct tuple format
+                x, y, node_type = node_tuple
                 new_node = GSNode(NSPoint(x, y), type=node_type)
-                new_path.nodes.append(new_node)
-            new_path.closed = shape['closed'] == 1
-            new_layer.paths.append(new_path)
+                new_layer.paths[0].nodes.append(new_node)  # Append to the first path
+
+        new_layer.paths[0].closed = True  # Assuming the path to be closed as per data
 
     font.save()
+
+
+    
