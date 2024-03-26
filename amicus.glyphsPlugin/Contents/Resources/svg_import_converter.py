@@ -32,6 +32,11 @@ def convert_svg_path_to_glyphs_nodes(svg_path):
     print("Converted Paths", nodes_str)
     return nodes_str
 
+def format_glyph_name(glyph_name):
+    formatted_name = glyph_name.strip("'")
+    print("Glyph name: ", formatted_name)
+    return formatted_name
+
 def construct_glyphs_shapes(parsed_data):
     shapes = "shapes = (\n"
     position = 0  # Initialize shape position

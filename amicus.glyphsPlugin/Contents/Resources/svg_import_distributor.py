@@ -26,16 +26,10 @@ def distribute_converted_data(converted_data):
         new_layer.name = new_layer_name
         glyph.layers.append(new_layer)
 
-        # Assume the data_item['layers'][0]['shapes'] contains direct node data
-        for shape in data_item['layers'][0]['shapes']:
-            # Directly appending the nodes to the Glyphs layer
-            for node_str in shape['nodes']:
-                node_tuple = eval(node_str)  # Assuming direct tuple format
-                x, y, node_type = node_tuple
-                new_node = GSNode(NSPoint(x, y), type=node_type)
-                new_layer.paths[0].nodes.append(new_node)  # Append to the first path
-
-        new_layer.paths[0].closed = True  # Assuming the path to be closed as per data
+        # Here, directly insert shapes data as it is
+        shapes_data = data_item['shapes']  # Assuming 'shapes' is a key in your data_item dictionary
+        # This is the crucial part, directly inserting shapes data into the newly created layer's userData
+        new_layer.userData['importedShapes'] = shapes_data
 
     font.save()
 
