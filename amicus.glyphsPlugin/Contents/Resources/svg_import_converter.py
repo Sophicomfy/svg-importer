@@ -14,7 +14,6 @@ def convert_svg_path_to_glyphs_nodes(svg_path):
     nodes = []
     commands = svg_path.split()
     path_scale = 100
-
     i = 0
 
     while i < len(commands):
