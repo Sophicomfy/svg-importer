@@ -1,29 +1,27 @@
-from GlyphsApp import Glyphs, GSLayer
+import GlyphsApp
 
-def distribute_to_glyphs(glyph_name, shapes_data):
+def distribute_data(glyphs_file, parsed_data):
     font = Glyphs.font
-    
-    glyph = font.glyphs[glyph_name]
-    if not glyph:
-        glyph = GSGlyph(glyph_name)
-        font.glyphs.append(glyph)
+
+    for data_item in parsed_data:
+        glyph_name = data_item['glyph_name']
+        shapes_data = data_item['shapes']
+
         glyph = font.glyphs[glyph_name]
-    
-    import_layers = [layer for layer in glyph.layers if layer.name.startswith("import")]
-    if import_layers:
-        highest_number = max([int(layer.name.replace("import", "")) for layer in import_layers])
-        new_layer_number = highest_number + 1
-    else:
-        new_layer_number = 1
+        if not glyph:
+            glyph = GSGlyph(glyph_name)
+            font.glyphs.append(glyph)
+        
+        import_layers = [layer for layer in glyph.layers if layer.name.startswith("import")]
+        next_import_number = len(import_layers) + 1
+        layer_name = f"import{next_import_number:02d}"
 
-    new_layer_name = "import" + str(new_layer_number).zfill(2)
-    new_layer = GSLayer()
-    new_layer.name = new_layer_name
-    glyph.layers.append(new_layer)
-
-    new_layer.shapes = eval(shapes_data)  
+        new_layer = GSLayer()
+        new_layer.name = layer_name
+        glyph.layers.append(new_layer)
+        
+        new_layer.shapes = shapes_data
+        
+        print(f"Data distributed into glyph '{glyph_name}' on layer '{layer_name}'.")
 
     font.save()
-
-distribute_to_glyphs(glyph_name, shapes_data)
-
