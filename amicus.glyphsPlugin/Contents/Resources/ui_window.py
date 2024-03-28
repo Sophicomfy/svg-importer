@@ -12,8 +12,10 @@ class AmicusWindow:
         self.w.cancelButton = Button((15, 100, 180, 20), "Cancel", callback=self.closeWindow)
         self.w.open()
 
-    def selectiveImportCallback(self, sender):
-        selective_import_svg()
+    def selectiveImportCallback(sender):
+        filePath = getFile("Select an SVG file", allowsMultipleSelection=False)
+        if filePath:
+            selective_import_svg(filePath[0])
 
     def batchImportCallback(self, sender):
         batch_import_svgs()
