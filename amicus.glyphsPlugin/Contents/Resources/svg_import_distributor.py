@@ -1,28 +1,21 @@
-from GlyphsApp import GSGlyph, GSLayer, Glyphs
-from svg_import_parser import parse_svg
-from svg_import_converter import construct_glyphs_shapes
+from GlyphsApp import Glyphs, GSGlyph, GSLayer
+from svg_import_parser import parse_svg_file_name
+from svg_import_converter import convert_svg_to_glyphs_path
 
-def distribute_data(glyphs_file, data):
-    font = Glyphs.font
+def distribute_svg_to_glyph(svg_file_path):
+    glyph_name = parse_svg_file_name(svg_file_path)
+    layer = convert_svg_to_glyphs_path(svg_file_path)
 
-    for data_item in data:
-        glyph_name, shapes_data = data_item['glyph_name'], data_item['shapes']
+    glyph = Glyphs.font.glyphs[glyph_name]
+    if not glyph:
+        glyph = GSGlyph(glyph_name)
+        Glyphs.font.glyphs.append(glyph)
 
-        glyph = font.glyphs[glyph_name]
-        if not glyph:
-            glyph = GSGlyph(glyph_name)
-            font.glyphs.append(glyph)
-        
-        import_layers = [layer for layer in glyph.layers if layer.name.startswith("import")]
-        number_of_imported_layers = len(import_layers) + 1
-        layer_name = "import" + str(number_of_imported_layers).zfill(2)
+    # Assuming the logic to name layers based on some criteria or simply adding a new layer
+    new_layer_name = "Imported SVG"
+    new_layer = GSLayer()
+    new_layer.name = new_layer_name
+    new_layer.shapes = layer.shapes  # Copy shapes from converted layer to the new layer
+    glyph.layers.append(new_layer)
 
-        new_layer = GSLayer()
-        new_layer.name = layer_name
-        glyph.layers.append(new_layer)
-
-        new_layer.setUserData_forKey_(shapes_data, "importedShapesData")
-
-        print(f"Data inserted into glyph '{glyph_name}' on layer '{layer_name}'.")
-
-    font.save()
+    print(f"SVG from {svg_file_path} has been distributed to glyph '{glyph_name}' in layer '{new_layer_name}'.")
