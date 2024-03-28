@@ -1,7 +1,7 @@
 # ui_window.py
 from GlyphsApp import *
 from vanilla import Window, Button, TextBox
-from svg_import import batch_import_svg, selective_import_svg
+from svg_import import batch_import_svgs, selective_import_svg
 
 class AmicusWindow:
     def __init__(self):
@@ -16,7 +16,7 @@ class AmicusWindow:
         selective_import_svg()
 
     def batchImportCallback(self, sender):
-        batch_import_svg()
+        batch_import_svgs()
 
     def closeWindow(self, sender):
         self.w.close()
