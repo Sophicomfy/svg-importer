@@ -9,14 +9,15 @@ from svg_import_distributor import distribute_data
 def selective_import_svg():
     file_path = GetOpenFile("Select an SVG file")
     if file_path:
-        parsed_data = parse_svg(file_path)
-        if parsed_data:
+        parsed_data = parse_svg(file_path)  
+        if parsed_data and isinstance(parsed_data, dict) and 'paths' in parsed_data:
             converted_data = construct_glyphs_shapes([parsed_data])  
-            distribute_data(converted_data) 
+            distribute_data(Glyphs.font, [converted_data])
         else:
-            print("Failed to parse the SVG file.")
+            print("Failed to parse the SVG file, or the data format is incorrect.")
     else:
         print("Selective import cancelled. No SVG file was selected.")
+
 
 
 def batch_import_svg():
