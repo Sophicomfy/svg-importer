@@ -1,4 +1,3 @@
-# ui_window.py
 from GlyphsApp import *
 from vanilla import Window, Button, TextBox
 from svg_import import batch_import_svgs, selective_import_svg
@@ -12,13 +11,15 @@ class AmicusWindow:
         self.w.cancelButton = Button((15, 100, 180, 20), "Cancel", callback=self.closeWindow)
         self.w.open()
 
-    def selectiveImportCallback(sender):
-        filePath = getFile("Select an SVG file", allowsMultipleSelection=False)
-        if filePath:
-            selective_import_svg(filePath[0])
+    def selectiveImportCallback(self, sender):
+        filePath = GetOpenFile("Select an SVG file")
+        if filePath:  
+            selective_import_svg(filePath)
 
     def batchImportCallback(self, sender):
-        batch_import_svgs()
+        folderPath = GetFolder()
+        if folderPath:  
+            batch_import_svgs(folderPath)
 
     def closeWindow(self, sender):
         self.w.close()
