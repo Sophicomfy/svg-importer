@@ -1,7 +1,13 @@
-from GlyphsApp import GSSVGtoPath
+from GlyphsApp import GSLayer, GSSVGtoPath
+import objc
+from Foundation import NSURL
 
-def convert_svg_to_glyphs_path(svg_file_path):
-    # Directly pass the file path to GSSVGtoPath
-    layer = GSSVGtoPath(svg_file_path)
-    print(layer)
+def convert_svg_to_glyphs_layer(svg_file_path):
+    layer = GSLayer()
+    svg_to_path = GSSVGtoPath.alloc().init()
+    url = NSURL.fileURLWithPath_(svg_file_path)
+    
+    success = svg_to_path.readFile_toLayer_error_(url, layer, None)
+    if not success:
+        print("Error during SVG conversion.")
     return layer

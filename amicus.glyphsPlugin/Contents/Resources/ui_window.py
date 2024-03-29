@@ -17,7 +17,7 @@ class AmicusWindow:
             selective_import_svg(filePath)
 
     def batchImportCallback(self, sender):
-        folderPath = GetFolder()
+        folderPath = GetFolder("Select a folder with SVG files")
         if folderPath:  
             batch_import_svgs(folderPath)
 
