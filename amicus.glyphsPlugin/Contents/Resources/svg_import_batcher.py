@@ -1,6 +1,6 @@
+from GlyphsApp import Glyphs
 from svg_import_loader import SVGImportLoader
 from svg_import_converter import convert_svg_to_glyphs_path
-from GlyphsApp import Glyphs
 
 def batch_process_svgs(folder_path):
     loader = SVGImportLoader()

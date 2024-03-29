@@ -1,5 +1,5 @@
+from GlyphsApp import Glyphs, GetOpenFile
 from vanilla import Window, Button, TextBox
-from GlyphsApp import *
 from svg_import_loader import SVGImportLoader
 from svg_import_distributor import distribute_data
 
