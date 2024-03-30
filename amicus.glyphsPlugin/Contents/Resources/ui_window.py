@@ -2,6 +2,7 @@ from GlyphsApp import Glyphs, GetOpenFile, GetFolder
 from vanilla import Window, Button, TextBox
 from svg_import_loader import SVGImportLoader
 from svg_import_distributor import distribute_data
+from svg_import import batch_import_svgs, selective_import_svg
 
 class AmicusWindow:
     def __init__(self):
