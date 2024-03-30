@@ -1,3 +1,4 @@
+from GlyphsApp import Glyphs
 from svg_import_loader import SVGImportLoader
 from svg_import_parser import parse_glyph_name
 from svg_import_converter import convert_svg_to_glyphs_layer
@@ -13,5 +14,6 @@ def batch_process_svgs(folder_path):
             distribute_data(svg_file)
             print(f"Successfully imported {svg_file} into '{glyph_name}'.")
             Glyphs.font.save() 
+            print("File saved")
         else:
             print(f"Conversion failed for {svg_file}. Skipping...")
