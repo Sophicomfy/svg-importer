@@ -1,4 +1,4 @@
-from GlyphsApp import Glyphs, GetOpenFile
+from GlyphsApp import Glyphs, GetOpenFile, GetFolder
 from vanilla import Window, Button, TextBox
 from svg_import_loader import SVGImportLoader
 from svg_import_distributor import distribute_data
@@ -20,10 +20,7 @@ class AmicusWindow:
     def batchImportCallback(self, sender):
         folderPath = GetFolder("Select a folder containing SVG files")
         if folderPath:
-            loader = SVGImportLoader()
-            svg_files = loader.load_svg_files_from_folder(folderPath)
-            for svg_file in svg_files:
-                distribute_data(svg_file)
+            batch_import_svgs(folderPath)
 
     def closeWindow(self, sender):
         self.w.close()
