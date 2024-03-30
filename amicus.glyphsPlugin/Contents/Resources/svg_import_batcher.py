@@ -1,4 +1,5 @@
 import GlyphsApp
+from GlyphsApp import Glyphs
 from svg_import_loader import SVGImportLoader
 from svg_import_converter import convert_svg_to_glyphs_layer
 from svg_import_parser import parse_glyph_name

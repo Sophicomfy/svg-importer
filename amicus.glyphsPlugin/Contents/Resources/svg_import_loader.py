@@ -1,4 +1,3 @@
-# svg_import_loader.py
 import os
 
 class SVGImportLoader:
