@@ -10,7 +10,7 @@ def batch_process_svgs(folder_path):
         glyph_name = parse_glyph_name(svg_file)  
         layer = convert_svg_to_glyphs_layer(svg_file)
         if layer:
-            distribute_data(glyph_name, layer)
+            distribute_data(svg_file)
             print(f"Successfully imported {svg_file} into '{glyph_name}'.")
             Glyphs.font.save() 
         else:
