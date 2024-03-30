@@ -20,6 +20,7 @@ class SVGImportLoader:
                 full_path = os.path.join(folder_path, file_name)
                 svg_files.append(full_path)
                 print(f"Loaded SVG file: {full_path}")
+        svg_files.sort()
         if not svg_files:
             print(f"No SVG files found in {folder_path}.")
         return svg_files
