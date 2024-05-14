@@ -15,7 +15,7 @@
     <key>CFBundleVersion</key>
     <string>1</string> <!-- Assuming initial build -->
     <key>NSPrincipalClass</key>
-    <string>AmicusSVGImporter</string>
+    <string>LTTRSVGImporter</string>
     <key>PyMainFileNames</key>
     <array>
         <string>plugin.py</string>

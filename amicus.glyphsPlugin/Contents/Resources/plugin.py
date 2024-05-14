@@ -3,10 +3,9 @@
 ###########################################################################################################
 #
 #
-#   General Plugin
-#
-#   Read the docs:
-#   https://github.com/schriftgestalt/GlyphsSDK/tree/master/Python%20Templates/General%20Plugin
+#   Glyphs SVG Importer
+#   Advanced batch importing and distribution to glyphs
+#   
 #
 #
 ###########################################################################################################
@@ -17,18 +16,18 @@ from GlyphsApp import *
 from GlyphsApp.plugins import *
 
 # Assembling the code imports
-from ui_main import showAmicusWindow
+from ui_main import showLTTRSVGImporterWindow
 
-class AmicusSVGImporter(GeneralPlugin):
+class LTTRSVGImporter(GeneralPlugin):
 
     @objc.python_method
     def settings(self):
         self.name = Glyphs.localize({
-            'en': 'Amicus',
-            'de': 'Amicus',
-            'fr': 'Amicus',
-            'es': 'Amicus',
-            'pt': 'Amicus',
+            'en': 'SVG Importer',
+            'de': 'SVG Importer',
+            'fr': 'SVG Importer',
+            'es': 'SVG Importer',
+            'pt': 'SVG Importer',
         })
 
     @objc.python_method
@@ -38,7 +37,7 @@ class AmicusSVGImporter(GeneralPlugin):
 
 # Assembling code calling functions
     def showWindow_(self, sender):
-        showAmicusWindow()
+        showLTTRSVGImporterWindow()
 
 
     @objc.python_method
