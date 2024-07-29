@@ -17,7 +17,7 @@ def parse_layer_name(svg_file_path):
         return layer_name
     else:
         return os.path.splitext(file_name)[0]
-    
+
 def parse_name_mappings(raw_content):
     name_mappings = {}
     lines = raw_content.strip().split('\n')
@@ -32,6 +32,3 @@ def parse_name_mappings(raw_content):
     sys.stdout.write(f"[svg_import_parser] Parsed name mappings: {name_mappings}\n")
     sys.stdout.flush()
     return name_mappings
-
-
-

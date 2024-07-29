@@ -36,7 +36,6 @@ class LTTRSVGImporter(GeneralPlugin):
     def showWindow_(self, sender):
         showLTTRSVGImporterWindow()
 
-
     @objc.python_method
     def __file__(self):
         """Please leave this method unchanged"""

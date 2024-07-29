@@ -1,7 +1,6 @@
 import GlyphsApp
 from GlyphsApp import Glyphs, GSGlyph, GSLayer
 from Foundation import NSURL, NSClassFromString
-from svg_import_parser import parse_glyph_name, parse_layer_name
 
 GSSVGtoPath = NSClassFromString("GSSVGtoPath")
 
@@ -24,10 +23,8 @@ def convert_svg_to_glyphs_layer(svg_file_path):
             print(f"Error during SVG conversion for {svg_file_path}, but no error details were provided.")
         return None
 
-def distribute_data(svg_file_path):
+def distribute_data(svg_file_path, glyph_name, layer_name):
     font = Glyphs.font  # Access the current font
-    glyph_name = parse_glyph_name(svg_file_path)  # Correctly parse the glyph name from the SVG file
-    layer_name = parse_layer_name(svg_file_path)  # Parse the layer name
     
     glyph = font.glyphs[glyph_name]
     if not glyph:

@@ -1,8 +1,6 @@
-# user_interface.py
-
 from GlyphsApp import Glyphs, GetOpenFile, GetFolder
 from vanilla import Window, Button, TextBox
-from svg_import import selective_import_svg, batch_import_svgs
+from svg_import import selective_import, batch_import
 
 class AmicusWindow:
     def __init__(self):
@@ -16,12 +14,12 @@ class AmicusWindow:
     def selectiveImportCallback(self, sender):
         filePath = GetOpenFile("Select an SVG file")
         if filePath:
-            selective_import_svg(filePath, GetFolder("Select a folder for name mappings"))
+            selective_import(filePath)
 
     def batchImportCallback(self, sender):
         folderPath = GetFolder("Select a folder containing SVG files")
         if folderPath:
-            batch_import_svgs(folderPath)
+            batch_import(folderPath)
 
     def closeWindow(self, sender):
         self.w.close()

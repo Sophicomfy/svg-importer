@@ -1,4 +1,3 @@
-import os
 import sys
 import logging
 
@@ -11,7 +10,7 @@ class SVGImportLoader:
         sys.stdout.write(f"[SVGImportLoader] {message}\n")
         sys.stdout.flush()
 
-    def load_single_svg(self, file_path):
+    def svg_import_single(self, file_path):
         self.log(f"Attempting to load single SVG: {file_path}")
         if file_path.endswith(".svg"):
             self.loaded_files.append(file_path)
