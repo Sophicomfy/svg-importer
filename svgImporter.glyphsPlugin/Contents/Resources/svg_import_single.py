@@ -1,7 +1,6 @@
-# svg_import_single.py
-
 import os
 import sys
+import logging
 
 class SVGImportLoader:
     def __init__(self):
@@ -9,7 +8,7 @@ class SVGImportLoader:
         self.name_mappings_content = ""
 
     def log(self, message):
-        sys.stdout.write(f"[SVGImportLoader] {message}\\n")
+        sys.stdout.write(f"[SVGImportLoader] {message}\n")
         sys.stdout.flush()
 
     def load_single_svg(self, file_path):

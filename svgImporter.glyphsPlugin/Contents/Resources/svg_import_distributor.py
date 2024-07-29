@@ -1,5 +1,3 @@
-# svg_import_distributor.py
-
 import GlyphsApp
 from GlyphsApp import Glyphs, GSGlyph, GSLayer
 from Foundation import NSURL, NSClassFromString
