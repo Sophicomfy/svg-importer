@@ -2,12 +2,9 @@
 
 ###########################################################################################################
 #
-#
 #   Glyphs SVG Importer
 #   Advanced batch importing and distribution to glyphs
 #   
-#
-#
 ###########################################################################################################
 
 from __future__ import division, print_function, unicode_literals
@@ -16,7 +13,7 @@ from GlyphsApp import *
 from GlyphsApp.plugins import *
 
 # Assembling the code imports
-from ui_main import showLTTRSVGImporterWindow
+from user_interface import showLTTRSVGImporterWindow
 
 class LTTRSVGImporter(GeneralPlugin):
 
