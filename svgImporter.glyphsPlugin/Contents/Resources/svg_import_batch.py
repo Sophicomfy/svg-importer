@@ -1,4 +1,5 @@
 import os
+from config import BATCH_LIMIT
 
 def svg_import_batch_load_directory(folder_path):
     svg_files = []
@@ -13,6 +14,12 @@ def svg_import_batch_load_directory(folder_path):
     return svg_files
 
 def svg_import_batch_process(svg_files_paths):
-    for svg_file_path in svg_files_paths:
-        print(f"Processing SVG file: {svg_file_path}")
-        yield svg_file_path
+    batch_count = (len(svg_files_paths) + BATCH_LIMIT - 1) / BATCH_LIMIT  # Calculate the number of batches needed
+    for batch_index in range(batch_count):
+        batch_start = batch_index * BATCH_LIMIT
+        batch_end = batch_start + BATCH_LIMIT
+        batch = svg_files_paths[batch_start:batch_end]
+        print(f"Processing batch {batch_index + 1}/{batch_count}")
+        for svg_file_path in batch:
+            print(f"Processing SVG file: {svg_file_path}")
+            yield svg_file_path
