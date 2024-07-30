@@ -24,7 +24,8 @@ def svg_import_extract_svg_files(html_content, temp_dir):
     log(f"Found {len(svgs)} SVGs in HTML file.")
     
     for i, svg in enumerate(svgs[:EXTRACTION_LIMIT]):  # Use the extraction limit from config.py
-        svg_file_path = os.path.join(temp_dir, f"extracted_svg_{i+1}.svg")
+        svg_file_name = f"{i+1:04}.svg"  # Ensure four-digit format
+        svg_file_path = os.path.join(temp_dir, svg_file_name)
         with open(svg_file_path, 'w', encoding='utf-8') as svg_file:
             svg_file.write(svg)
         log(f"Extracted SVG to {svg_file_path}")
