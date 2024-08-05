@@ -9,7 +9,8 @@ class AmicusWindow:
         self.w.selectiveImportButton = Button((15, 40, 180, 20), "Selective Import", callback=self.selectiveImportCallback)
         self.w.batchImportButton = Button((15, 70, 180, 20), "Batch Import", callback=self.batchImportCallback)
         self.w.htmlImportButton = Button((15, 100, 180, 20), "HTML Import", callback=self.htmlImportCallback)
-        self.w.cancelButton = Button((15, 130, 180, 20), "Cancel", callback=self.closeWindow)
+        self.w.postProcessButton = Button((15, 130, 180, 20), "Post Process Paths", callback=self.postProcessCallback)
+        self.w.cancelButton = Button((15, 160, 180, 20), "Cancel", callback=self.closeWindow)
         self.w.open()
 
     def selectiveImportCallback(self, sender):
@@ -26,6 +27,10 @@ class AmicusWindow:
         filePath = GetOpenFile("Select an HTML file")
         if filePath:
             html_import(filePath)
+
+    def postProcessCallback(self, sender):
+        from post_process import run_post_processing
+        run_post_processing()
 
     def closeWindow(self, sender):
         self.w.close()

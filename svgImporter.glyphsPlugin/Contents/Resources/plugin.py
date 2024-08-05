@@ -11,8 +11,6 @@ from __future__ import division, print_function, unicode_literals
 import objc
 from GlyphsApp import *
 from GlyphsApp.plugins import *
-
-# Assembling the code imports
 from user_interface import showLTTRSVGImporterWindow
 
 class LTTRSVGImporter(GeneralPlugin):
@@ -32,7 +30,6 @@ class LTTRSVGImporter(GeneralPlugin):
         newMenuItem = NSMenuItem(self.name, self.showWindow_)
         Glyphs.menu[EDIT_MENU].append(newMenuItem)
 
-# Assembling code calling functions
     def showWindow_(self, sender):
         showLTTRSVGImporterWindow()
 
