@@ -1,7 +1,6 @@
 import os
 import sys
-from html.parser import HTMLParser
-from config import EXTRACTION_LIMIT
+from config import EXTRACTION_LIMIT, FILE_NAME_DIGITS
 
 def log(message):
     sys.stdout.write(f"[svg_import_html] {message}\n")
@@ -24,51 +23,30 @@ def svg_import_extract_svg_files(html_content, temp_dir):
     log(f"Found {len(svgs)} SVGs in HTML file.")
     
     for i, svg in enumerate(svgs[:EXTRACTION_LIMIT]):  # Use the extraction limit from config.py
-        svg_file_name = f"{i+1:04}.svg"  # Ensure four-digit format
+        svg_file_name = f"{i+1:0{FILE_NAME_DIGITS}}.svg"  # Ensure correct digit format
         svg_file_path = os.path.join(temp_dir, svg_file_name)
         with open(svg_file_path, 'w', encoding='utf-8') as svg_file:
             svg_file.write(svg)
         log(f"Extracted SVG to {svg_file_path}")
 
 def extract_svgs_from_html(html_content):
-    in_svg = False
-    svg_content = ""
     svgs = []
-
-    def handle_starttag(tag, attrs):
-        nonlocal in_svg, svg_content
-        if tag == 'svg':
-            in_svg = True
-            svg_content = "<svg"
-            for attr in attrs:
-                svg_content += f" {attr[0]}='{attr[1]}'"
-            svg_content += ">"
-
-    def handle_endtag(tag):
-        nonlocal in_svg, svg_content, svgs
-        if tag == 'svg' and in_svg:
-            svg_content += "</svg>"
-            svgs.append(svg_content)
-            in_svg = False
-
-    def handle_data(data):
-        nonlocal svg_content
-        if in_svg:
-            svg_content += data
-
-    def handle_startendtag(tag, attrs):
-        nonlocal svg_content
-        if in_svg:
-            svg_content += f"<{tag}"
-            for attr in attrs:
-                svg_content += f" {attr[0]}='{attr[1]}'"
-            svg_content += "/>"
-
-    parser = HTMLParser()
-    parser.handle_starttag = handle_starttag
-    parser.handle_endtag = handle_endtag
-    parser.handle_data = handle_data
-    parser.handle_startendtag = handle_startendtag
-
-    parser.feed(html_content)
+    pos = 0
+    
+    while pos < len(html_content):
+        start_tag = html_content.find('<svg', pos)
+        if start_tag == -1:
+            break
+        
+        end_tag = html_content.find('</svg>', start_tag)
+        if end_tag == -1:
+            break
+        
+        end_tag += len('</svg>')
+        
+        svg_content = html_content[start_tag:end_tag]
+        svgs.append(svg_content)
+        
+        pos = end_tag
+    
     return svgs
