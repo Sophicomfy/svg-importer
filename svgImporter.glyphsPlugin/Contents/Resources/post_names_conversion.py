@@ -1,18 +1,24 @@
-# post_names_conversion.py
-
+import os
 import csv
 from GlyphsApp import Glyphs
 from config import MAPPINGS_ORIG, MAPPINGS_NEW, NAME_MAPPINGS_PATH
 
 def load_name_mappings():
+    script_dir = os.path.dirname(os.path.realpath(__file__))
+
     mappings = {}
-    with open(NAME_MAPPINGS_PATH, 'r') as csvfile:
-        reader = csv.DictReader(csvfile)
-        for row in reader:
-            orig_name = row[MAPPINGS_ORIG].strip()
-            new_name = row[MAPPINGS_NEW].strip()
-            if orig_name and new_name:
-                mappings[orig_name] = new_name
+    try:
+        with open(full_path, 'r') as csvfile:
+            reader = csv.DictReader(csvfile)
+            for row in reader:
+                orig_name = row[MAPPINGS_ORIG].strip()
+                new_name = row[MAPPINGS_NEW].strip()
+                if orig_name and new_name:
+                    mappings[orig_name] = new_name
+    except FileNotFoundError as e:
+        print(f"Error: {e}")
+        raise
+
     return mappings
 
 def rename_glyphs(font, mappings):
