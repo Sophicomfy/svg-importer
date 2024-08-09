@@ -1,4 +1,5 @@
 from GlyphsApp import Glyphs
+from post_names_conversion import run_name_conversion
 
 def run_post_processing():
     font = Glyphs.font
@@ -14,6 +15,9 @@ def run_post_processing():
     
     # Step 3: Correct paths directions
     correct_paths_directions(font)
+    
+    # Step 4: Convert glyph names
+    run_name_conversion()
     
     # Save the file
     font.save()

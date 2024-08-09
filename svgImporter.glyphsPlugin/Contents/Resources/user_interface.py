@@ -1,6 +1,7 @@
-from GlyphsApp import Glyphs, GetOpenFile, GetFolder
+from GlyphsApp import GetOpenFile, GetFolder
 from vanilla import Window, Button, TextBox
 from svg_import import selective_import, batch_import, html_import
+from post_names_conversion import run_name_conversion
 
 class AmicusWindow:
     def __init__(self):
@@ -10,7 +11,8 @@ class AmicusWindow:
         self.w.batchImportButton = Button((15, 70, 180, 20), "Batch Import", callback=self.batchImportCallback)
         self.w.htmlImportButton = Button((15, 100, 180, 20), "HTML Import", callback=self.htmlImportCallback)
         self.w.postProcessButton = Button((15, 130, 180, 20), "Post Process Paths", callback=self.postProcessCallback)
-        self.w.cancelButton = Button((15, 160, 180, 20), "Cancel", callback=self.closeWindow)
+        self.w.renameGlyphsButton = Button((15, 160, 180, 20), "Rename Glyphs", callback=self.renameGlyphsCallback)
+        self.w.cancelButton = Button((15, 190, 180, 20), "Cancel", callback=self.closeWindow)
         self.w.open()
 
     def selectiveImportCallback(self, sender):
@@ -31,6 +33,9 @@ class AmicusWindow:
     def postProcessCallback(self, sender):
         from post_process import run_post_processing
         run_post_processing()
+
+    def renameGlyphsCallback(self, sender):
+        run_name_conversion()
 
     def closeWindow(self, sender):
         self.w.close()
